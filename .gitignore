@@ -19,10 +19,10 @@ projectile-bookmarks.eld
 session*
 .cask
 tramp
-/var/pcache
 .emacs.desktop
 .emacs.desktop.lock
 network-security.data
 prelude-cheatsheet.el
 prelude-cheatsheet.aux
 prelude-cheatsheet.log
+/ac-comphist.dat
