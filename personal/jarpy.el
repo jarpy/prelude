@@ -17,8 +17,7 @@
 (defun indent-buffer ()
   (interactive)
   (indent-region 0 (buffer-size))
-  (whitespace-cleanup)
-  )
+  (whitespace-cleanup))
 
 ;; Auto save
 (prelude-require-package 'auto-save-buffers-enhanced)
@@ -33,7 +32,7 @@
 (load-theme 'solarized-dark t)
 (prelude-require-package 'xterm-color)
 (require 'xterm-color)
-(set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height 110 :background "#0C1A1F")
+(set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height 110 :background "#18282c")
 (set-face-attribute 'mode-line () :height 80 :background "#0C1F1F")
 (set-face-attribute 'mode-line-inactive () :height 80 :background "#0C1F1F")
 
@@ -50,8 +49,8 @@
 ; FIXME: No lambda kebabs
  (lambda ()
    (set-frame-parameter (selected-frame) 'right-divider-width 1)
-   (set-frame-parameter (selected-frame) 'left-fringe 3)
-   (set-frame-parameter (selected-frame) 'right-fringe 3)))
+   (set-frame-parameter (selected-frame) 'left-fringe 5)
+   (set-frame-parameter (selected-frame) 'right-fringe 5)))
 
 ;; comint install
 (progn (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter)
@@ -128,8 +127,7 @@
 (defun puppet-lint-fix ()
   "Run the current buffer's file through 'puppet-lint --fix'."
   (interactive)
-  (puppet-run-check-command (concat "puppet-lint --fix " (buffer-file-name)) "*puppet-lint*")
-  )
+  (puppet-run-check-command (concat "puppet-lint --fix " (buffer-file-name)) "*puppet-lint*"))
 
 ;; Gherkin
 (prelude-require-package 'feature-mode)
@@ -221,15 +219,23 @@
 (defun jarpy-prettify-json ()
   (mark-whole-buffer))
 
+;; Perl
+(fset 'perl-mode 'cperl-mode)
+(add-hook
+ 'cperl-mode-hook
+ (lambda()
+   (setq cperl-close-paren-offset -4
+         cperl-continued-statement-offset 0
+         cperl-indent-level 4
+         cperl-indent-parens-as-block t
+         cperl-tabs-always-indent t)))
+
 ;; Turn on some languages for Org/Babel
 (org-babel-do-load-languages
  'org-babel-load-languages
- '(
-   (sh . t)
+ '((sh . t)
    (python . t)
-   (ruby . t)
-   ))
-
+   (ruby . t)))
 
 (provide 'jarpy)
 ;;; jarpy.el ends here
