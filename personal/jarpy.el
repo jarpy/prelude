@@ -12,6 +12,8 @@
 (setq mouse-yank-at-point t)
 (global-unset-key "\C-x\C-c")
 (global-set-key (kbd "M-p") 'ace-window)
+(setq exec-path (append exec-path '("~/go/bin" "/usr/local/go/bin/go")))
+(setenv "PATH" (concat (getenv "PATH") "~/go/bin" "/usr/local/go/bin/go"))
 
 
 (defun indent-buffer ()
@@ -32,9 +34,12 @@
 (load-theme 'solarized-dark t)
 (prelude-require-package 'xterm-color)
 (require 'xterm-color)
-(set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height 110 :background "#18282c")
-(set-face-attribute 'mode-line () :height 80 :background "#0C1F1F")
-(set-face-attribute 'mode-line-inactive () :height 80 :background "#0C1F1F")
+(set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height 150 :background "#1c1c1c")
+(set-face-attribute 'mode-line () :height 130 :background "#262626")
+(set-face-attribute 'mode-line-inactive () :height 130 :background "#1c1c1c")
+(set-face-attribute 'minibuffer-prompt () :height 160 :background "#262626")
+(with-current-buffer (get-buffer " *Echo Area 0*")
+   (setq-local face-remapping-alist '((default (:height 1.0 :background "#304050")))))
 
 (set-face-attribute 'cursor () :background "#0f0")
 (add-hook 'minibuffer-setup-hook (lambda ()
@@ -60,14 +65,16 @@
 
 (add-hook 'term-mode-hook
           (lambda()
-            (set-face-attribute 'term () :family "Bitstream Vera Sans Mono" :background "#0C1A1F")))
+            (set-face-attribute 'term () :family "Bitstream Vera Sans Mono" :background "#1c1c1c1")))
 
 (set-face-attribute 'comint-highlight-prompt nil
                     :inherit nil)
 
 
 ;; Look and Feel
-;(global-rainbow-delimiters-mode)
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'yaml-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'yaml-mode-hook 'smartparens-mode)
 (scroll-bar-mode -1)
 (global-hl-line-mode -1)
 (electric-indent-mode -1)
@@ -103,13 +110,13 @@
 ;; (key-chord-define-global "aa" 'prelude-move-beginning-of-line)
 (key-chord-define-global "YY" 'prelude-duplicate-current-line-or-region)
 (key-chord-define-global "DD" 'prelude-kill-whole-line)
-;; (key-chord-define-global "kk" 'easy-kill)
+(key-chord-define-global "jz" 'ace-jump-zap-to-char)
 ;; (key-chord-define-global "jk" 'sp-kill-hybrid-sexp)
 ;; (key-chord-define-global "yy" 'yank)
 ;; (key-chord-define-global "WW" 'kill-region)
 (key-chord-define-global "XX" 'delete-window)
 ;; (key-chord-define-global "MM" 'delete-other-windows)
-(key-chord-define-global "jb" 'ido-switch-buffer)
+(key-chord-define-global "jb" 'ace-jump-buffer)
 
 ;; (setq ace-jump-mode-end-hook 'recenter)
 ;; Use Firefox as the default browser
@@ -118,6 +125,15 @@
 ;; whitespace-mode
 (setq prelude-clean-whitespace-on-save nil)
 (setq whitespace-line-column 120)
+
+;; Elasticsearch
+(prelude-require-package 'es-mode)
+
+;; Go
+(add-hook 'go-mode-hook
+          (lambda ()
+            (setq tab-width 2)
+            (setq auto-save-buffers-enhanced-interval 3)))
 
 ;; Ruby
 (prelude-require-package 'rubocop)
@@ -129,21 +145,24 @@
   (interactive)
   (puppet-run-check-command (concat "puppet-lint --fix " (buffer-file-name)) "*puppet-lint*"))
 
+(setq puppet-validate-command "puppet parser validate --color=false")
+(add-hook 'puppet-mode-hook (lambda ()
+                              (setq puppet-validate-command "puppet parser validate --color=false")))
+
 ;; Gherkin
 (prelude-require-package 'feature-mode)
 
 ;; Javascript
-(flycheck-define-checker javascript-jslint-reporter
-  "A JavaScript syntax and style checker based on JSLint Reporter.
-  See URL https://github.com/FND/jslint-reporter"
+;; disable jshint since we prefer eslint checking
+(setq-default flycheck-disabled-checkers
+  (append flycheck-disabled-checkers
+    '(javascript-jshint)))
 
-  :command ("~/.emacs.d/personal/jslint-reporter" source)
-  :error-patterns
-  ((error line-start (1+ nonl) ":" line ":" column ":" (message) line-end))
-  :modes (js-mode js2-mode js3-mode))
-(add-hook 'js-mode-hook (lambda ()
-                          (flycheck-select-checker 'javascript-jslint-reporter)
-                          (flycheck-mode)))
+;; use eslint with web-mode for jsx files
+(flycheck-add-mode 'javascript-eslint 'web-mode)
+
+
+
 ;; Mediawiki
 (prelude-require-package 'mediawiki)
 
@@ -233,9 +252,9 @@
 ;; Turn on some languages for Org/Babel
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((sh . t)
+ '((elasticsearch . t)
+   (sh . t)
    (python . t)
    (ruby . t)))
-
 (provide 'jarpy)
 ;;; jarpy.el ends here
