@@ -124,9 +124,6 @@
 (setq prelude-clean-whitespace-on-save nil)
 (setq whitespace-line-column 120)
 
-;; Elasticsearch
-(prelude-require-package 'es-mode)
-
 ;; Go
 (add-hook 'go-mode-hook
           (lambda ()
@@ -239,11 +236,15 @@
 
 ;; Elasticsearch
 (prelude-require-package 'es-mode)
-(add-to-list
- 'es-response-success-functions
- (lambda(status content-type buffer)
-   (json-mode)
-   (json-pretty-print (point-min) (point-max))))
+
+(add-hook
+ 'es-mode-hook
+ (lambda ()
+   (add-to-list
+    'es-response-success-functions
+    (lambda (status content-type buffer)
+      (json-mode)
+      (json-pretty-print (point-min) (point-max))))))
 
 ;; Perl
 (fset 'perl-mode 'cperl-mode)
