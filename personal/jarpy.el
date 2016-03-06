@@ -213,15 +213,16 @@
 (setq org-latex-tables-centered nil)
 (setq org-src-fontify-natively t)
 (setq org-src-tab-acts-natively t)
-(setq org-agenda-files "~/Dropbox/org/agenda-files")
+;;(setq org-agenda-files "~/Dropbox/org")
 (global-set-key (kbd "C-c =")
                 (lambda () (interactive) (find-file-other-window "~/Dropbox/org/index.org")))
-(setq org-directory "~/Dropbox/org")
+;;(setq org-directory "~/Dropbox/org")
 
 ;(setq org-mobile-inbox-for-pull "~/Dropbox/org/flagged.org")
 ;(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-(setq org-todo-keywords
-      '((sequence "TODO" "CURRENT" "|" "DONE")))
+;;(setq org-todo-keywords
+;;      '((sequence "TODO" "CURRENT" "|" "DONE")))
+
 ;; Shell
 (setq sh-indentation 2)
 
@@ -235,6 +236,14 @@
 ;; Javascript
 (defun jarpy-prettify-json ()
   (mark-whole-buffer))
+
+;; Elasticsearch
+(prelude-require-package 'es-mode)
+(add-to-list
+ 'es-response-success-functions
+ (lambda(status content-type buffer)
+   (json-mode)
+   (json-pretty-print (point-min) (point-max))))
 
 ;; Perl
 (fset 'perl-mode 'cperl-mode)
