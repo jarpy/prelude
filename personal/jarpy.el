@@ -1,3 +1,4 @@
+
 ;;; jarpy.el -- Jarpy's Emacs config
 
 ;;; Commentary:
@@ -230,21 +231,22 @@
 (add-hook 'org-shiftdown-final-hook 'windmove-down)
 (add-hook 'org-shiftright-final-hook 'windmove-right)
 
-;; Javascript
-(defun jarpy-prettify-json ()
-  (mark-whole-buffer))
-
 ;; Elasticsearch
 (prelude-require-package 'es-mode)
+(defun jarpy-prettify-es-response (status content-type buffer)
+  (if (string= "application/json" 'content-type)
+      (progn
+        (json-mode)
+        (json-pretty-print (point-min) (point-max)))))
 
-(add-hook
- 'es-mode-hook
- (lambda ()
-   (add-to-list
-    'es-response-success-functions
-    (lambda (status content-type buffer)
-      (json-mode)
-      (json-pretty-print (point-min) (point-max))))))
+(add-hook 'es-mode-hook
+          (lambda()
+            (add-to-list
+             'es-response-success-functions 'jarpy-prettify-es-response)
+            (add-to-list
+             'es-response-failure-functions 'jarpy-prettify-es-response)))
+
+(setq es-response-success-functions ())
 
 ;; Perl
 (fset 'perl-mode 'cperl-mode)
