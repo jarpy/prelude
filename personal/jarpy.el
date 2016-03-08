@@ -1,4 +1,3 @@
-
 ;;; jarpy.el -- Jarpy's Emacs config
 
 ;;; Commentary:
@@ -234,7 +233,7 @@
 ;; Elasticsearch
 (prelude-require-package 'es-mode)
 (defun jarpy-prettify-es-response (status content-type buffer)
-  (if (string= "application/json" 'content-type)
+  (if (string-prefix-p "application/json" content-type)
       (progn
         (json-mode)
         (json-pretty-print (point-min) (point-max)))))
