@@ -69,15 +69,15 @@
 (set-face-attribute 'comint-highlight-prompt nil
                     :inherit nil)
 
-
 ;; Look and Feel
+(setq initial-scratch-message nil)
+(setq inhibit-startup-message t)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'yaml-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'yaml-mode-hook 'smartparens-mode)
 (scroll-bar-mode -1)
 (global-hl-line-mode -1)
 (electric-indent-mode -1)
-(global-prettify-symbols-mode)
 (custom-set-variables '(speedbar-show-unknown-files t))
 
 ;; Glyph all the things!
@@ -96,8 +96,6 @@
           ("function" . 402)
           ("defun" . 402))))
 (add-hook 'prelude-prog-mode-hook 'set-prelude-prog-mode-defaults t)
-(setq initial-scratch-message nil)
-(setq inhibit-startup-message t)
 
 ;; Key bindings
 (global-set-key (kbd "RET") 'newline-and-indent)
@@ -162,6 +160,7 @@
 (setq-default flycheck-disabled-checkers
   (append flycheck-disabled-checkers
     '(javascript-jshint)))
+(setq js-indent-level 2)
 
 ;; use eslint with web-mode for jsx files
 (flycheck-add-mode 'javascript-eslint 'web-mode)
