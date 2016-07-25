@@ -28,24 +28,25 @@
 (auto-save-buffers-enhanced t)
 
 ;; Theme
+(setq jarpy-font-size 120)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (setq custom-theme-directory "~/.emacs.d/themes")
 (prelude-require-package 'solarized-theme)
 (load-theme 'solarized-dark t)
 (prelude-require-package 'xterm-color)
 (require 'xterm-color)
-(set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height 150 :background "#1c1c1c")
-(set-face-attribute 'mode-line () :height 130 :background "#262626")
-(set-face-attribute 'mode-line-inactive () :height 130 :background "#1c1c1c")
-(set-face-attribute 'minibuffer-prompt () :height 130 :background "#262626")
+(set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height jarpy-font-size :background "#1c1c1c")
+(set-face-attribute 'mode-line () :height (- jarpy-font-size 20) :background "#262626")
+(set-face-attribute 'mode-line-inactive () :height (- jarpy-font-size 20) :background "#1c1c1c")
+(set-face-attribute 'minibuffer-prompt () :height (- jarpy-font-size 20) :background "#262626")
 
 (set-face-attribute 'cursor () :background "#0f0")
 (add-hook 'minibuffer-setup-hook (lambda ()
-  (setq-local face-remapping-alist '((default :height 130)))))
+  (setq-local face-remapping-alist '((default :height (- jarpy-font-size 20))))))
 (with-current-buffer (get-buffer " *Echo Area 0*")
-  (setq-local face-remapping-alist '((default :height 130))))
+  (setq-local face-remapping-alist '((default :height (- jarpy-font-size 20)))))
 (with-current-buffer (get-buffer " *Echo Area 1*")
-  (setq-local face-remapping-alist '((default :height 130))))
+  (setq-local face-remapping-alist '((default :height (- jarpy-font-size 20)))))
 
 (add-hook
  'window-configuration-change-hook
