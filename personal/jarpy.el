@@ -79,6 +79,15 @@
 (electric-indent-mode -1)
 (global-prettify-symbols-mode)
 (custom-set-variables '(speedbar-show-unknown-files t))
+
+;; Glyph all the things!
+(global-prettify-symbols-mode)
+(prelude-require-package 'company-emoji)
+(add-to-list 'company-backends 'company-emoji)
+(defun --set-emoji-font (frame)
+  (set-fontset-font t 'symbol (font-spec :family "Symbola") frame 'prepend))
+(add-hook 'after-make-frame-functions '--set-emoji-font)
+
 (defun set-prelude-prog-mode-defaults ()
   (turn-off-flyspell)
   (diff-hl-mode -1)
