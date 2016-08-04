@@ -7,7 +7,7 @@
 ;;; Code:
 
 ;; General Behaviours
-(setq prelude-guru nil)
+;; (setq prelude-guru nil)
 (setq read-file-name-completion-ignore-case 1)
 (setq mouse-yank-at-point t)
 (global-unset-key "\C-x\C-c")
@@ -28,21 +28,18 @@
 (auto-save-buffers-enhanced t)
 
 ;; Theme
-(setq jarpy-font-size 120)
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(setq custom-theme-directory "~/.emacs.d/themes")
 (prelude-require-package 'solarized-theme)
-(load-theme 'solarized-dark t)
 (prelude-require-package 'xterm-color)
 (require 'xterm-color)
-(set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height jarpy-font-size :background "#1c1c1c")
-(set-face-attribute 'mode-line () :height (- jarpy-font-size 20) :background "#262626")
-(set-face-attribute 'mode-line-inactive () :height (- jarpy-font-size 20) :background "#1c1c1c")
-(set-face-attribute 'minibuffer-prompt () :height (- jarpy-font-size 20) :background "#262626")
-
+(let ((size 120))
+  (set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height size :background "#1c1c1c")
+  (set-face-attribute 'mode-line () :height (- size 20) :background "#262626")
+  (set-face-attribute 'mode-line-inactive () :height (- size 20) :background "#1c1c1c")
+  (set-face-attribute 'minibuffer-prompt () :height (- size 20) :background "#262626"))
 (set-face-attribute 'cursor () :background "#0f0")
+
 (add-hook 'minibuffer-setup-hook (lambda ()
-  (setq-local face-remapping-alist '((default :height (- jarpy-font-size 20))))))
+                                   (setq-local face-remapping-alist '((default :height (- jarpy-font-size 20))))))
 (with-current-buffer (get-buffer " *Echo Area 0*")
   (setq-local face-remapping-alist '((default :height (- jarpy-font-size 20)))))
 (with-current-buffer (get-buffer " *Echo Area 1*")
@@ -50,7 +47,6 @@
 
 (add-hook
  'window-configuration-change-hook
-; FIXME: No lambda kebabs
  (lambda ()
    (set-frame-parameter (selected-frame) 'right-divider-width 1)
    (set-frame-parameter (selected-frame) 'left-fringe 5)
@@ -59,7 +55,7 @@
 ;; comint install
 (progn (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter)
        (setq comint-output-filter-functions(
-          remove 'ansi-color-process-output comint-output-filter-functions))
+                                            remove 'ansi-color-process-output comint-output-filter-functions))
        (setq font-lock-unfontify-region-function 'xterm-color-unfontify-region))
 
 (add-hook 'term-mode-hook
@@ -97,30 +93,36 @@
           ("defun" . 402))))
 (add-hook 'prelude-prog-mode-hook 'set-prelude-prog-mode-defaults t)
 
+(defun jarpy-kill-current-buffer ()
+  (interactive)
+  (kill-buffer nil))
+
 ;; Key bindings
+(prelude-require-package 'ace-jump-buffer)
 (global-set-key (kbd "RET") 'newline-and-indent)
 (key-chord-define-global "jj" nil)
-(key-chord-define-global "jk" nil)
-(key-chord-define-global "jl" nil)
-(key-chord-define-global "JJ" nil)
+;; (key-chord-define-global "jk" nil)
+;; (key-chord-define-global "jl" nil)
+;; (key-chord-define-global "JJ" nil)
 (key-chord-define-global "uu" nil)
 (key-chord-define-global "xx" nil)
 (key-chord-define-global "yy" nil)
-(key-chord-define-global "jw" 'avy-goto-word-0)
-(key-chord-define-global "jc" 'avy-goto-char)
-(key-chord-define-global "jl" 'avy-goto-line)
+(key-chord-define-global "jw" 'avy-goto-word-1)
+;; (key-chord-define-global "jk" 'avy-goto-char)
+;; (key-chord-define-global "jl" 'avy-goto-line)
 ;; (key-chord-define-global "GG" 'find-file-at-point)
 (key-chord-define-global "FF" 'ido-find-file-other-window)
 ;; (key-chord-define-global "BB" 'ace-jump-buffer-other-window)
 (key-chord-define-global "fj" 'hippie-expand)
 ;; (key-chord-define-global "aa" 'prelude-move-beginning-of-line)
-(key-chord-define-global "YY" 'prelude-duplicate-current-line-or-region)
-(key-chord-define-global "DD" 'prelude-kill-whole-line)
-(key-chord-define-global "jz" 'ace-jump-zap-to-char)
+(key-chord-define-global "YY" 'crux-duplicate-current-line-or-region)
+(key-chord-define-global "DD" 'kill-whole-line)
+;; (key-chord-define-global "jz" 'ace-jump-zap-to-char)
 ;; (key-chord-define-global "jk" 'sp-kill-hybrid-sexp)
 ;; (key-chord-define-global "yy" 'yank)
-;; (key-chord-define-global "WW" 'kill-region)
-(key-chord-define-global "XX" 'delete-window)
+;; (key-chord-define-global "WWX" 'kill-region)
+(key-chord-define-global "XX" 'kill-buffer-and-window)
+(key-chord-define-global "ZZ" 'jarpy-kill-current-buffer)
 ;; (key-chord-define-global "MM" 'delete-other-windows)
 (key-chord-define-global "jb" 'ace-jump-buffer)
 
@@ -158,8 +160,8 @@
 ;; Javascript
 ;; disable jshint since we prefer eslint checking
 (setq-default flycheck-disabled-checkers
-  (append flycheck-disabled-checkers
-    '(javascript-jshint)))
+              (append flycheck-disabled-checkers
+                      '(javascript-jshint)))
 (setq js-indent-level 2)
 
 ;; use eslint with web-mode for jsx files
@@ -204,11 +206,11 @@
  python-shell-prompt-regexp "In \\[[0-9]+\\]: "
  python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
  python-shell-completion-setup-code
-   "from IPython.core.completerlib import module_completion"
+ "from IPython.core.completerlib import module_completion"
  python-shell-completion-module-string-code
-   "';'.join(module_completion('''%s'''))\n"
+ "';'.join(module_completion('''%s'''))\n"
  python-shell-completion-string-code
-   "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+ "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
 ;; iPython Notebook Support
 (prelude-require-package 'ein)
@@ -219,15 +221,8 @@
 (setq org-latex-tables-centered nil)
 (setq org-src-fontify-natively t)
 (setq org-src-tab-acts-natively t)
-;;(setq org-agenda-files "~/Dropbox/org")
 (global-set-key (kbd "C-c =")
                 (lambda () (interactive) (find-file-other-window "~/Dropbox/org/index.org")))
-;;(setq org-directory "~/Dropbox/org")
-
-;(setq org-mobile-inbox-for-pull "~/Dropbox/org/flagged.org")
-;(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-;;(setq org-todo-keywords
-;;      '((sequence "TODO" "CURRENT" "|" "DONE")))
 
 ;; Shell
 (setq sh-indentation 2)
@@ -274,5 +269,6 @@
    (sh . t)
    (python . t)
    (ruby . t)))
+
 (provide 'jarpy)
 ;;; jarpy.el ends here
