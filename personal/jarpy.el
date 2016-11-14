@@ -31,19 +31,19 @@
 (prelude-require-package 'solarized-theme)
 (prelude-require-package 'xterm-color)
 (require 'xterm-color)
-(let ((size 120))
+(let ((size 210))
   (set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height size :background "#1c1c1c")
   (set-face-attribute 'mode-line () :height (- size 20) :background "#262626")
   (set-face-attribute 'mode-line-inactive () :height (- size 20) :background "#1c1c1c")
-  (set-face-attribute 'minibuffer-prompt () :height (- size 20) :background "#262626"))
+  (set-face-attribute 'minibuffer-prompt () :height (- size 20) :background "#262626")
+  (with-current-buffer (get-buffer " *Echo Area 0*")
+    (setq-local face-remapping-alist '((default :height (- size 20)))))
+  (with-current-buffer (get-buffer " *Echo Area 1*")
+    (setq-local face-remapping-alist '((default :height (- size 20))))))
 (set-face-attribute 'cursor () :background "#0f0")
 
 (add-hook 'minibuffer-setup-hook (lambda ()
                                    (setq-local face-remapping-alist '((default :height (- jarpy-font-size 20))))))
-(with-current-buffer (get-buffer " *Echo Area 0*")
-  (setq-local face-remapping-alist '((default :height (- jarpy-font-size 20)))))
-(with-current-buffer (get-buffer " *Echo Area 1*")
-  (setq-local face-remapping-alist '((default :height (- jarpy-font-size 20)))))
 
 (add-hook
  'window-configuration-change-hook
@@ -180,6 +180,7 @@
 (prelude-require-package 'ac-etags)
 (require 'auto-complete)
 (global-auto-complete-mode t)
+(setq tab-always-indent 'complete)
 
 ;; Python
 (prelude-require-package 'jedi)
