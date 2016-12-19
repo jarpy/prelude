@@ -7,7 +7,7 @@
 ;;; Code:
 
 ;; General Behaviours
-;; (setq prelude-guru nil)
+(setq prelude-guru nil)
 (setq read-file-name-completion-ignore-case 1)
 (setq mouse-yank-at-point t)
 (global-unset-key "\C-x\C-c")
@@ -31,19 +31,14 @@
 (prelude-require-package 'solarized-theme)
 (prelude-require-package 'xterm-color)
 (require 'xterm-color)
-(let ((size 210))
-  (set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height size :background "#1c1c1c")
-  (set-face-attribute 'mode-line () :height (- size 20) :background "#262626")
-  (set-face-attribute 'mode-line-inactive () :height (- size 20) :background "#1c1c1c")
-  (set-face-attribute 'minibuffer-prompt () :height (- size 20) :background "#262626")
-  (with-current-buffer (get-buffer " *Echo Area 0*")
-    (setq-local face-remapping-alist '((default :height (- size 20)))))
-  (with-current-buffer (get-buffer " *Echo Area 1*")
-    (setq-local face-remapping-alist '((default :height (- size 20))))))
-(set-face-attribute 'cursor () :background "#0f0")
 
-(add-hook 'minibuffer-setup-hook (lambda ()
-                                   (setq-local face-remapping-alist '((default :height (- jarpy-font-size 20))))))
+(setq jarpy-font-size 180)
+(set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height jarpy-font-size :background "#1c1c1c")
+(set-face-attribute 'mode-line () :background "#262626")
+(set-face-attribute 'mode-line-inactive () :background "#1c1c1c")
+(set-face-attribute 'minibuffer-prompt () :background "#262626")
+(set-face-attribute 'flyspell-incorrect () :background "#803330")
+(set-face-attribute 'cursor () :background "#0f0")
 
 (add-hook
  'window-configuration-change-hook
@@ -126,7 +121,6 @@
 ;; (key-chord-define-global "MM" 'delete-other-windows)
 (key-chord-define-global "jb" 'ace-jump-buffer)
 
-;; (setq ace-jump-mode-end-hook 'recenter)
 ;; Use Firefox as the default browser
 (setq browse-url-browser-function 'browse-url-firefox)
 
@@ -153,6 +147,12 @@
 (setq puppet-validate-command "puppet parser validate --color=false")
 (add-hook 'puppet-mode-hook (lambda ()
                               (setq puppet-validate-command "puppet parser validate --color=false")))
+
+(setq puppet-lint-command
+      "puppet-lint --no-autoloader_layout-check --with-context --log-format \"%{path}:%{linenumber}: %{kind}: %{message} (%{check})\"")
+
+(add-to-list 'flycheck-puppet-lint-disabled-checks "autoloader_layout")
+(add-to-list 'flycheck-puppet-lint-disabled-checks "variable_scope")
 
 ;; Gherkin
 (prelude-require-package 'feature-mode)
@@ -270,6 +270,27 @@
    (sh . t)
    (python . t)
    (ruby . t)))
+
+;; Helpers for voice control with Dragon.
+(defun jarpy-goto-word ()
+  "Dragon friendly avy-goto-word-0 with numeric targets."
+  (interactive)
+  (let ((avy-keys (number-sequence ?0 ?9)))
+    (avy-goto-word-0 nil)))
+
+(defun jarpy-goto-line ()
+  "Dragon friendly avy-goto-line with numeric targets."
+  (interactive)
+  (let ((avy-keys (number-sequence ?0 ?9)))
+    (avy-goto-line nil)))
+
+(defun jarpy-goto-buffer ()
+  "Dragon friendly ace-jump-buffer with numeric targets."
+  (interactive)
+  (let ((avy-keys (number-sequence ?0 ?9)))
+    (ace-jump-buffer)))
+
+(setq frame-title-format "emacs")
 
 (provide 'jarpy)
 ;;; jarpy.el ends here
