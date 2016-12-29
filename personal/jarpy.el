@@ -284,6 +284,12 @@
   (let ((avy-keys (number-sequence ?0 ?9)))
     (avy-goto-line nil)))
 
+(defun jarpy-goto-char (char)
+  "Dragon friendly avy-goto-char with numeric targets for CHAR."
+  (interactive (list (read-char "char: " t) current-prefix-arg))
+  (let ((avy-keys (number-sequence ?0 ?9)))
+    (avy-goto-char char)))
+
 (defun jarpy-goto-buffer ()
   "Dragon friendly ace-jump-buffer with numeric targets."
   (interactive)
