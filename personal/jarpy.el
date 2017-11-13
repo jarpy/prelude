@@ -33,9 +33,9 @@
 (require 'xterm-color)
 
 (setq jarpy-font-size 180)
-(set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height jarpy-font-size :background "#1c1c1c")
+(set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height jarpy-font-size :foreground "#d0d0d0" :background "#101010")
 (set-face-attribute 'mode-line () :background "#262626")
-(set-face-attribute 'mode-line-inactive () :background "#1c1c1c")
+(set-face-attribute 'mode-line-inactive () :background "101010")
 (set-face-attribute 'minibuffer-prompt () :background "#262626")
 (set-face-attribute 'flyspell-incorrect () :background "#803330")
 (set-face-attribute 'cursor () :background "#0f0")
@@ -55,7 +55,7 @@
 
 (add-hook 'term-mode-hook
           (lambda()
-            (set-face-attribute 'term () :family "Bitstream Vera Sans Mono" :background "#1c1c1c1")))
+            (set-face-attribute 'term () :family "Bitstream Vera Sans Mono" :background "#00000")))
 
 (set-face-attribute 'comint-highlight-prompt nil
                     :inherit nil)
