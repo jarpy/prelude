@@ -55,7 +55,9 @@
 
 (add-hook 'term-mode-hook
           (lambda()
-            (set-face-attribute 'term () :family "Bitstream Vera Sans Mono" :background "#00000")))
+            (set-face-attribute 'term () :family "Bitstream Vera Sans Mono" :background "#101010")
+            (set-face-attribute 'term-color-black () :foreground "#d0d0d0" :background "#101010")
+            (setq term-default-bg-color nil)))
 
 (set-face-attribute 'comint-highlight-prompt nil
                     :inherit nil)
