@@ -14,7 +14,8 @@
 (global-set-key (kbd "M-p") 'ace-window)
 (setq exec-path (append exec-path '("~/go/bin" "/usr/local/go/bin/go")))
 (setenv "PATH" (concat (getenv "PATH") "~/go/bin" "/usr/local/go/bin/go"))
-
+(setq-default fill-column 80)
+(setq create-lockfiles nil)
 
 (defun indent-buffer ()
   (interactive)
