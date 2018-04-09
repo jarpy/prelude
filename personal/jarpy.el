@@ -16,6 +16,7 @@
 (setenv "PATH" (concat (getenv "PATH") "~/go/bin" "/usr/local/go/bin/go"))
 (setq-default fill-column 80)
 (setq create-lockfiles nil)
+(setq frame-title-format "Emacs visiting %b in %m mode")
 
 (defun indent-buffer ()
   (interactive)
