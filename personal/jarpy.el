@@ -27,15 +27,13 @@
 ;; Auto save
 (prelude-require-package 'auto-save-buffers-enhanced)
 (require 'auto-save-buffers-enhanced)
-(auto-save-buffers-enhanced-include-only-checkout-path t)
+;;(auto-save-buffers-enhanced-include-only-checkout-path t)
 (auto-save-buffers-enhanced t)
 
 ;; Theme
 (prelude-require-package 'solarized-theme)
-(prelude-require-package 'xterm-color)
-(require 'xterm-color)
 
-(setq jarpy-font-size 180)
+(setq jarpy-font-size 140)
 (set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height jarpy-font-size :foreground "#d0d0d0" :background "#101010")
 (set-face-attribute 'mode-line () :background "#262626")
 (set-face-attribute 'mode-line-inactive () :background "101010")
