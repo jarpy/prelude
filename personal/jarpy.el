@@ -17,6 +17,7 @@
 (setq-default fill-column 80)
 (setq create-lockfiles nil)
 (setq frame-title-format "Emacs visiting %b in %m mode")
+(setq projectile-use-git-grep t)
 
 (defun indent-buffer ()
   (interactive)
