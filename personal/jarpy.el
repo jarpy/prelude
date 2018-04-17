@@ -205,16 +205,16 @@
 
 ;; iPython as python-shell
 (setq
- python-shell-interpreter "ipython"
- python-shell-interpreter-args ""
+ python-shell-interpreter "ipython3"
+ python-shell-interpreter-args "--simple-prompt"
  python-shell-prompt-regexp "In \\[[0-9]+\\]: "
  python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
- python-shell-completion-setup-code
- "from IPython.core.completerlib import module_completion"
- python-shell-completion-module-string-code
- "';'.join(module_completion('''%s'''))\n"
- python-shell-completion-string-code
- "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+ python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
+ python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
+ python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"
+ flycheck-python-pycompile-executable "python3"
+ flycheck-python-pylint-executable "python3"
+ flycheck-python-flake8-executable "python3")
 
 ;; iPython Notebook Support
 (prelude-require-package 'ein)
