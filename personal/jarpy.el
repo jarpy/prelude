@@ -299,7 +299,7 @@
   (let ((avy-keys (number-sequence ?0 ?9)))
     (ace-jump-buffer)))
 
-(setq frame-title-format "emacs")
+(setq frame-title-format "emacs: %b in %m mode")
 
 (provide 'jarpy)
 ;;; jarpy.el ends here
