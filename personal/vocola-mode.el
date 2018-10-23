@@ -10,18 +10,11 @@
     (modify-syntax-entry ?# "<" table)
     (modify-syntax-entry ?\n ">" table)
     (modify-syntax-entry ?` "w" table)
-    ;; Don't notice strings in qoutes, we are more interesting in the contents.
+    (modify-syntax-entry ?\; "." table)
+    ;; Don't notice strings in qoutes. We would like to maintain all the usual
+    ;; syntax highlighting within the strings.
     (modify-syntax-entry ?\' "w" table)
     (modify-syntax-entry ?\" "w" table)
-;;(modify-syntax-entry ?$ "'" table)
-    ;; (modify-syntax-entry ?= "." table)
-    ;; (modify-syntax-entry ?| "." table)
-    ;; (modify-syntax-entry ?\" "\"" table)
-    ;; (modify-syntax-entry ?\' "\"" table)
-    ;; (modify-syntax-entry ?\( "(" table)
-    ;; (modify-syntax-entry ?\) ")" table)
-    ;; (modify-syntax-entry ?} "(" table)
-    ;; (modify-syntax-entry ?{ ")" table)
     table)
   "Syntax table for vocola-mode.")
 
