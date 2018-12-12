@@ -138,6 +138,9 @@
 (setq prelude-clean-whitespace-on-save nil)
 (setq whitespace-line-column 120)
 
+;; Git
+(setq git-commit-fill-column 72)
+
 ;; Go
 (add-hook 'go-mode-hook
           (lambda ()
