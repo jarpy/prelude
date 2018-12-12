@@ -97,6 +97,10 @@
   (interactive)
   (kill-buffer nil))
 
+(defun jarpy-jump-term ()
+  (interactive)
+  (switch-to-buffer (get-buffer "*ansi-term*")))
+
 ;; Key bindings
 (prelude-require-package 'ace-jump-buffer)
 (global-set-key (kbd "RET") 'newline-and-indent)
@@ -104,6 +108,7 @@
 ;; (key-chord-define-global "jk" nil)
 ;; (key-chord-define-global "jl" nil)
 ;; (key-chord-define-global "JJ" nil)
+(key-chord-define-global "jt" 'jarpy-jump-term)
 (key-chord-define-global "uu" nil)
 (key-chord-define-global "xx" nil)
 (key-chord-define-global "yy" nil)
