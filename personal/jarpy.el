@@ -276,6 +276,14 @@
          cperl-indent-parens-as-block t
          cperl-tabs-always-indent t)))
 
+;; Terraform
+(prelude-require-package 'terraform-mode)
+(defun jarpy-terraform-mode-before-save-hook ()
+  (when (eq major-mode 'terraform-mode)
+    (terraform-format-buffer)))
+(add-hook 'before-save-hook 'jarpy-terraform-mode-before-save-hook)
+
+
 ;; Turn on some languages for Org/Babel
 (org-babel-do-load-languages
  'org-babel-load-languages
