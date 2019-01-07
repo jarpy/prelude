@@ -283,15 +283,6 @@
     (terraform-format-buffer)))
 (add-hook 'before-save-hook 'jarpy-terraform-mode-before-save-hook)
 
-
-;; Turn on some languages for Org/Babel
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((elasticsearch . t)
-   (sh . t)
-   (python . t)
-   (ruby . t)))
-
 ;; Helpers for voice control with Dragon.
 (defun jarpy-goto-word ()
   "Dragon friendly avy-goto-word-0 with numeric targets."
