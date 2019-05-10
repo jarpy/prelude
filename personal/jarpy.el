@@ -36,9 +36,9 @@
 (require 'xterm-color)
 
 (setq jarpy-font-size 180)
-(set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height jarpy-font-size :foreground "#d0d0d0" :background "#101010")
+(set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height jarpy-font-size :foreground "#d0d0d0" :background "#202020")
 (set-face-attribute 'mode-line () :background "#262626")
-(set-face-attribute 'mode-line-inactive () :background "101010")
+(set-face-attribute 'mode-line-inactive () :background "#101010")
 (set-face-attribute 'minibuffer-prompt () :background "#262626")
 (set-face-attribute 'flyspell-incorrect () :background "#803330")
 (set-face-attribute 'cursor () :background "#0f0")
@@ -58,9 +58,9 @@
 
 (add-hook 'term-mode-hook
           (lambda()
-            (set-face-attribute 'term () :family "Bitstream Vera Sans Mono" :background "#101010")
-            (set-face-attribute 'term-color-black () :foreground "#d0d0d0" :background "#101010")
-            (setq term-default-bg-color nil)))
+            (set-face-attribute 'term () :family "Bitstream Vera Sans Mono" :background "#202020")
+            (set-face-attribute 'term-color-black () :foreground "#d0d0d0" :background "#202020")
+            (setq term-default-bg-color "#202020")))
 
 (set-face-attribute 'comint-highlight-prompt nil
                     :inherit nil)
@@ -86,7 +86,7 @@
 
 (defun set-prelude-prog-mode-defaults ()
   (turn-off-flyspell)
-  (diff-hl-mode -1)
+  ;(diff-hl-mode -1)
   (setq prettify-symbols-alist
         '(("lambda" . 955)
           ("function" . 402)
@@ -126,6 +126,7 @@
 ;; (key-chord-define-global "jk" 'sp-kill-hybrid-sexp)
 ;; (key-chord-define-global "yy" 'yank)
 ;; (key-chord-define-global "WWX" 'kill-region)
+(key-chord-define-global "WW" 'fill-region)
 (key-chord-define-global "XX" 'kill-buffer-and-window)
 (key-chord-define-global "ZZ" 'jarpy-kill-current-buffer)
 ;; (key-chord-define-global "MM" 'delete-other-windows)
@@ -136,7 +137,13 @@
 
 ;; whitespace-mode
 (setq prelude-clean-whitespace-on-save nil)
-(setq whitespace-line-column 120)
+;;(setq whitespace-style '(face empty tabs lines-tail trailing))
+(setq whitespace-line-column 80)
+
+;; highlight-indent-guides-mode
+(setq highlight-indent-guides-auto-enabled nil)
+(set-face-foreground'sp-pair-overlay-face "#000000")
+(set-face-background 'sp-show-pair-enclosing "#d75f00")
 
 ;; Git
 (setq git-commit-fill-column 72)
@@ -150,6 +157,12 @@
 ;; Ruby
 (prelude-require-package 'rubocop)
 (require 'rubocop)
+
+;; Yaml
+(prelude-require-package 'highlight-indent-guides)
+(add-hook 'yaml-mode-hook
+          (lambda ()
+            (highlight-indent-guides-mode t)))
 
 ;; Puppet
 (defun puppet-lint-fix ()
@@ -205,13 +218,14 @@
 (defun set-python-mode-defaults ()
   (setq jedi:setup-keys t)
   (setq jedi:complete-on-dot t)
+;;  (flycheck-add-next-checker 'python-flake8 'python-mypy)
   (local-set-key (kbd "RET") 'newline-and-indent))
 (add-hook 'python-mode-hook 'set-python-mode-defaults)
 (add-hook 'python-mode-hook
           (lambda ()
             (push '("self" . ?自) prettify-symbols-alist)
             (modify-syntax-entry ?. ".")))
-(setq flycheck-flake8-maximum-line-length 120)
+(setq flycheck-flake8-maximum-line-length 80)
 
 ;; iPython as python-shell
 (setq
@@ -240,6 +254,9 @@
 
 ;; Shell
 (setq sh-indentation 2)
+;; Highlights variables inside strings
+(font-lock-add-keywords
+ 'sh-mode '(("\\(\\${.*?}\\)" 1 'font-lock-variable-name-face prepend)))
 
 ;; Make windmove work in Org-mode
 (setq org-replace-disputed-keys t)
