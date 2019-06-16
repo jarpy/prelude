@@ -71,6 +71,7 @@
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'yaml-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'yaml-mode-hook 'smartparens-mode)
+(add-hook 'yaml-mode-hook 'highlight-indent-guides-mode)
 (scroll-bar-mode -1)
 (global-hl-line-mode -1)
 (electric-indent-mode -1)
@@ -131,6 +132,7 @@
 (key-chord-define-global "ZZ" 'jarpy-kill-current-buffer)
 ;; (key-chord-define-global "MM" 'delete-other-windows)
 (key-chord-define-global "jb" 'ace-jump-buffer)
+(key-chord-define-global "^^" 'sp-unwrap-sexp)
 
 ;; Use Firefox as the default browser
 (setq browse-url-browser-function 'browse-url-firefox)
@@ -142,9 +144,12 @@
 
 ;; highlight-indent-guides-mode
 (setq highlight-indent-guides-auto-enabled nil)
-(set-face-foreground'sp-pair-overlay-face "#000000")
-(set-face-background 'sp-show-pair-enclosing "#d75f00")
+(set-face-background 'highlight-indent-guides-odd-face "#202020")
+(set-face-background 'highlight-indent-guides-even-face "#272727")")
 
+;; smartparens
+(set-face-foreground'sp-show-pair-match-face "#000000")
+(set-face-background 'sp-show-pair-match-face "#faf")
 ;; Git
 (setq git-commit-fill-column 72)
 
