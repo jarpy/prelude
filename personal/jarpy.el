@@ -17,7 +17,32 @@
 (setq-default fill-column 80)
 (setq create-lockfiles nil)
 (setq frame-title-format "Emacs visiting %b in %m mode")
-(setq projectile-use-git-grep t)
+(prelude-require-package 'window-purpose)
+
+;; I love undo-tree, but it's bugged.
+(global-undo-tree-mode -1)
+
+;; Purpose
+(prelude-require-package 'window-purpose)
+(purpose-mode)
+(setq purpose-user-mode-purposes
+      '((clojure-mode . source)
+        (cider-repl-mode . repl)
+        (cider-stacktrace-mode . compilation)
+        (compilation-mode . compilation)
+        (term-mode . terminal)
+        ))
+(setq purpose-user-name-purposes
+      '(("*buffer-selection*" . source)
+        ))
+(purpose-compile-user-configuration)
+(add-hook 'compilation-mode-hook (lambda () (text-scale-decrease 2)))
+(global-set-key (kbd "C-x f") (without-purpose-command #'ido-find-file))
+
+
+;; Projectile
+(add-to-list 'projectile-project-root-files "Makefile" "Chart.yaml")
+(setq projectile-use-git-grep nil)
 
 (defun indent-buffer ()
   (interactive)
@@ -32,16 +57,28 @@
 
 ;; Theme
 (prelude-require-package 'solarized-theme)
+(prelude-require-package 'afternoon-theme)
 (prelude-require-package 'xterm-color)
+(load-theme 'sanityinc-tomorrow-night)
+
 (require 'xterm-color)
 
 (setq jarpy-font-size 180)
-(set-face-attribute 'default () :family "Bitstream Vera Sans Mono" :height jarpy-font-size :foreground "#d0d0d0" :background "#202020")
-(set-face-attribute 'mode-line () :background "#262626")
-(set-face-attribute 'mode-line-inactive () :background "#101010")
-(set-face-attribute 'minibuffer-prompt () :background "#262626")
-(set-face-attribute 'flyspell-incorrect () :background "#803330")
-(set-face-attribute 'cursor () :background "#0f0")
+(set-face-attribute 'default ()
+                    :family "Bitstream Vera Sans Mono"
+                    :height jarpy-font-size
+                    :foreground "#d0d0d0"
+                    :background "#202020")
+;;(set-face-attribute 'mode-line () :background "#262626")
+;;(set-face-attribute 'mode-line-inactive () :background "#101010")
+;;(set-face-attribute 'minibuffer-prompt () :background "#262626")
+;;(set-face-attribute 'flyspell-incorrect () :background "#803330")
+(set-face-attribute 'cursor () :background "#0f0" :foreground "#202020")
+(set-face-attribute 'region () :background "#070" :foreground nil)
+(set-face-attribute 'whitespace-trailing () :background nil :foreground "#c36")
+(set-face-attribute 'whitespace-line () :background "#c36" :foreground nil)
+(set-face-attribute 'font-lock-comment-face () :foreground "#a8a8a8")
+
 
 (add-hook
  'window-configuration-change-hook
@@ -52,14 +89,19 @@
 
 ;; comint install
 (progn (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter)
-       (setq comint-output-filter-functions(
-                                            remove 'ansi-color-process-output comint-output-filter-functions))
+       (setq
+        comint-output-filter-functions
+        (remove 'ansi-color-process-output comint-output-filter-functions))
        (setq font-lock-unfontify-region-function 'xterm-color-unfontify-region))
 
 (add-hook 'term-mode-hook
           (lambda()
-            (set-face-attribute 'term () :family "Bitstream Vera Sans Mono" :background "#202020")
-            (set-face-attribute 'term-color-black () :foreground "#d0d0d0" :background "#202020")
+            (set-face-attribute 'term ()
+                                :family "Bitstream Vera Sans Mono"
+                                :background "#202020")
+            (set-face-attribute 'term-color-black ()
+                                :foreground "#d0d0d0"
+                                :background "#202020")
             (setq term-default-bg-color "#202020")))
 
 (set-face-attribute 'comint-highlight-prompt nil
@@ -94,6 +136,10 @@
           ("defun" . 402))))
 (add-hook 'prelude-prog-mode-hook 'set-prelude-prog-mode-defaults t)
 
+;; Beacon
+(setq beacon-blink-duration 0.6)
+(setq beacon-color "#0f0")
+
 (defun jarpy-kill-current-buffer ()
   (interactive)
   (kill-buffer nil))
@@ -105,10 +151,22 @@
 ;; Key bindings
 (prelude-require-package 'ace-jump-buffer)
 (global-set-key (kbd "RET") 'newline-and-indent)
+(global-set-key [f5] 'compile)
+
+(global-set-key (kbd "C-<backspace>") 'sp-backward-kill-sexp)
+(global-set-key (kbd "C-M-<backspace>") 'sp-splice-sexp-killing-backward)
+(global-set-key (kbd "C-S-<backspace>") 'sp-splice-sexp-killing-around)
+(global-set-key (kbd "C-M-\\") 'sp-split-sexp)
+(key-chord-define-global "^^" 'sp-splice-sexp)
+
 (key-chord-define-global "jj" nil)
 ;; (key-chord-define-global "jk" nil)
 ;; (key-chord-define-global "jl" nil)
-;; (key-chord-define-global "JJ" nil)
+(key-chord-define-global
+ "JJ"
+ (without-purpose-command
+   #'crux-switch-to-previous-buffer))
+
 (key-chord-define-global "jt" 'jarpy-jump-term)
 (key-chord-define-global "uu" nil)
 (key-chord-define-global "xx" nil)
@@ -117,7 +175,11 @@
 ;; (key-chord-define-global "jk" 'avy-goto-char)
 ;; (key-chord-define-global "jl" 'avy-goto-line)
 ;; (key-chord-define-global "GG" 'find-file-at-point)
-(key-chord-define-global "FF" 'ido-find-file-other-window)
+;;(key-chord-define-global "FF" 'ido-find-file-other-window)
+
+(key-chord-define-global "FF" (without-purpose-command #'ido-find-file))
+
+
 ;; (key-chord-define-global "BB" 'ace-jump-buffer-other-window)
 (key-chord-define-global "fj" 'hippie-expand)
 ;; (key-chord-define-global "aa" 'prelude-move-beginning-of-line)
@@ -131,8 +193,8 @@
 (key-chord-define-global "XX" 'kill-buffer-and-window)
 (key-chord-define-global "ZZ" 'jarpy-kill-current-buffer)
 ;; (key-chord-define-global "MM" 'delete-other-windows)
-(key-chord-define-global "jb" 'ace-jump-buffer)
-(key-chord-define-global "^^" 'sp-unwrap-sexp)
+;;(key-chord-define-global "jb" 'ace-jump-buffer)
+(key-chord-define-global "jb" (without-purpose-command #'ace-jump-projectile-buffers))
 
 ;; Use Firefox as the default browser
 (setq browse-url-browser-function 'browse-url-firefox)
@@ -144,12 +206,33 @@
 
 ;; highlight-indent-guides-mode
 (setq highlight-indent-guides-auto-enabled nil)
-(set-face-background 'highlight-indent-guides-odd-face "#202020")
-(set-face-background 'highlight-indent-guides-even-face "#272727")")
+;(set-face-background 'highlight-indent-guides-odd-face "#202020")
+;(set-face-background 'highlight-indent-guides-even-face "#272727")
 
 ;; smartparens
-(set-face-foreground'sp-show-pair-match-face "#000000")
-(set-face-background 'sp-show-pair-match-face "#faf")
+(set-face-attribute 'sp-show-pair-match-content-face()
+                    :weight 'bold
+                    :background "#323"
+                    :slant 'italic)
+
+(set-face-attribute 'sp-show-pair-match-face()
+                    :weight 'normal
+                    :background "#d3f"
+                    :foreground "#202020")
+
+(set-face-attribute 'sp-show-pair-mismatch-face()
+                    :weight 'normal
+                    :background "#a33"
+                    :foreground "#202020")
+
+;; Face for parens getting slurped and barfed.
+(set-face-attribute 'sp-show-pair-enclosing()
+                    :weight 'bold
+                    :slant 'italic
+                    :background "#f76"
+                    :foreground "#202020")
+
+
 ;; Git
 (setq git-commit-fill-column 72)
 
